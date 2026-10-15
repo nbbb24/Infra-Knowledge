@@ -1,10 +1,12 @@
-# Infra Knowledge
+<h1 align="center">Infra Knowledge</h1>
 
-Infra Knowledge is a bilingual knowledge base for AI infrastructure. The first topic explains NPU hardware,
-memory movement, and cluster networking in plain language.
+<p align="center">A bilingual knowledge base for AI infrastructure</p>
 
-- 中文入口：[docs/zh/index.md](docs/zh/index.md)
-- English entry: [docs/en/index.md](docs/en/index.md)
+<p align="center">
+| <a href="docs/zh/index.md">中文</a> | <a href="docs/en/index.md">EN</a> |
+</p>
+
+The first topic explains NPU hardware, memory movement, and cluster networking in plain language.
 
 ## Local preview
 
