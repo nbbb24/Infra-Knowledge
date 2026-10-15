@@ -59,16 +59,14 @@ markdown_extensions:
       alternate_style: true
 
 nav:
-  - 首页: index.md
-  - 基础知识:
+  - 昇腾 NPU 基础知识学习手册: index.md
+  - 专题拆分:
       - NPU 硬件与层级: npu/mental-model.md
       - 核心术语: npu/glossary.md
-  - 数据与通信:
       - 数据搬运与 H2D: npu/data-movement.md
       - 网络平面与出框口: npu/network-planes.md
       - 互联、协议与通信软件: npu/interconnects.md
       - 内存、NUMA 与地址: npu/memory-addressing.md
-  - 实践:
       - 一次端到端数据传输: npu/end-to-end-transfer.md
       - 性能分析与常用工具: npu/performance-tools.md
 
