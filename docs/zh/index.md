@@ -8,11 +8,6 @@
 
 建议先建立一张完整的知识地图，再逐步理解每个术语在实际系统中的位置。
 
-!!! note "适用范围"
-
-    本文解释通用概念并使用昇腾术语举例。不同产品的 Die 数量、AI Core 结构、内存层次、互联能力和
-    端口映射可能不同，具体硬件结论应以对应型号与软件版本的官方文档为准。
-
 ## 一、NPU 整体知识地图
 
 下面的概念层次表示逻辑关系，而不是严格的硬件物理连接。可以把 NPU 系统理解成五个层次：
@@ -24,16 +19,6 @@
 | 搬运层 | H2D、D2H、D2D、P2P、DMA | 数据从哪里搬到哪里？ |
 | 通信层 | HCCS、PCIe、RoCE、RDMA、URMA | 数据通过什么链路传输？ |
 | 网络与软件层 | 参数面、业务面、出框口、HCCL | 网络如何组织，软件怎样管理通信？ |
-
-```mermaid
-flowchart LR
-    A[硬件层<br/>NPU / Die / AI Core / HBM]
-    B[内存层<br/>Host / Device / NUMA / VA / PA]
-    C[搬运层<br/>H2D / D2H / D2D / P2P / DMA]
-    D[通信层<br/>PCIe / HCCS / RoCE / RDMA / URMA]
-    E[网络与软件层<br/>参数面 / 数据面 / 出框口 / HCCL]
-    A --> B --> C --> D --> E
-```
 
 ## 二、硬件基础：Die、NPU、HBM、AI Core
 
@@ -58,19 +43,17 @@ flowchart LR
 - **Chip / Package**：封装后的芯片产品，可能包含一个或多个 Die。
 - **NPU Device**：软件层面识别和管理的计算设备，不一定与 Die 一一对应。
 
-```mermaid
-flowchart TB
-    subgraph P1[单 Die 封装示意]
-        D1[Die 0]
-    end
-    subgraph P2[多 Die 封装示意]
-        D20[Die 0]
-        D21[Die 1]
-        D20 <-->|封装内互联| D21
-    end
-```
-
-上图是通用封装示意，不代表某一款昇腾产品的实际 Die 数量或布局。
+<div class="diagram-pair">
+  <figure class="diagram-card">
+    <img src="assets/diagrams/single-die.svg" alt="单 Die 封装示意">
+    <figcaption>单 Die 示意</figcaption>
+  </figure>
+  <figure class="diagram-card">
+    <img src="assets/diagrams/multi-die.svg" alt="多 Die 封装示意">
+    <figcaption>多 Die 示意</figcaption>
+  </figure>
+</div>
+<p class="diagram-caption">通用封装示意，不代表某一款昇腾产品的实际 Die 数量或布局。</p>
 
 为什么需要关注 Die？因为数据传输可能涉及：
 
@@ -81,9 +64,8 @@ flowchart TB
 
 这些路径可能经过不同的硬件互联、地址映射和通信引擎，性能也可能不同。
 
-!!! warning "不要混淆物理边界"
-
-    跨 Die 不等于跨卡，跨 Device 也不一定等于跨物理封装。分析 A5 等设备时，需要结合实际拓扑判断。
+**注意：跨 Die 不等于跨卡，跨 Device 也不一定等于跨物理封装。** 分析 A5 等设备时，需要结合
+实际拓扑判断。
 
 ### 2.3 AI Core、AICPU、HBM
 
@@ -121,17 +103,24 @@ flowchart TB
 
 这与上一节的“参数面”不是一个维度。
 
-```mermaid
-flowchart LR
-    CP[控制面 Control Plane<br/>决定如何通信]
-    DP[数据面 Data Plane<br/>执行实际通信]
-    CP -->|发现、建链、注册和准备资源| DP
-    DP -->|读、写、复制、同步和完成| DONE[业务数据可用]
-```
-
-**控制面 (Control Plane)** 决定如何通信，负责资源初始化、拓扑发现、连接建立和资源管理。
-
-**数据面 (Data Plane)** 执行实际通信，负责数据读取、写入、复制、同步及通信操作。
+<div class="concept-grid">
+  <div class="concept-card">
+    <div class="concept-title">
+      <span class="sliders-icon" aria-hidden="true"></span>
+      <strong>控制面 Control Plane</strong>
+    </div>
+    <p>决定如何通信。</p>
+    <small>资源初始化、拓扑发现、连接建立、资源管理。</small>
+  </div>
+  <div class="concept-card">
+    <div class="concept-title">
+      <span class="transfer-icon" aria-hidden="true">⇄</span>
+      <strong>数据面 Data Plane</strong>
+    </div>
+    <p>执行实际通信。</p>
+    <small>数据读取、写入、复制、同步及通信操作。</small>
+  </div>
+</div>
 
 以 MemFabric 为例：
 
@@ -275,22 +264,33 @@ RDMA 更像是一类远程直接内存访问技术的统称。URMA 则是 UB 体
 
 ### 5.3 HCCL、HCOMM、MemFabric 的关系
 
-```mermaid
-flowchart TB
-    APP[vLLM / SGLang<br/>模型推理与业务调度]
-    HCCL[HCCL<br/>集合通信]
-    MF[MemFabric<br/>内存池化与数据搬运]
-    HCOMM[HCOMM / 其他通信后端<br/>通信接口与底层资源管理]
-    LINK[PCIe / HCCS / RoCE / UB 等互联能力]
-
-    APP --> HCCL
-    APP --> MF
-    HCCL --> HCOMM
-    MF --> HCOMM
-    HCOMM --> LINK
-```
-
-这是简化的软件关系图。HCCL 与 MemFabric 并非严格上下级关系，具体依赖随通信后端实现而变化。
+<div class="software-stack">
+  <div class="stack-card">
+    <strong>vLLM / SGLang</strong>
+    <small>模型推理与业务调度</small>
+  </div>
+  <div class="stack-arrow" aria-hidden="true">⇅</div>
+  <div class="stack-split">
+    <div class="stack-card stack-blue">
+      <strong>HCCL</strong>
+      <small>集合通信</small>
+    </div>
+    <div class="stack-card stack-teal">
+      <strong>MemFabric</strong>
+      <small>内存池化与数据搬运</small>
+    </div>
+  </div>
+  <div class="stack-arrow" aria-hidden="true">↓</div>
+  <div class="stack-card">
+    <strong>通信接口与底层资源管理</strong>
+    <small>HCOMM / 其他通信后端</small>
+  </div>
+  <div class="stack-arrow" aria-hidden="true">↓</div>
+  <div class="stack-card">
+    <strong>PCIe / HCCS / RoCE / UB 等互联能力</strong>
+  </div>
+</div>
+<p class="diagram-caption">简化的软件关系图，HCCL 与 MemFabric 并非严格上下级关系；具体依赖随后端实现而变化。</p>
 
 - **HCCL** 主要解决多设备通信算子问题，如 AllReduce、AllGather。
 - **HCOMM** 提供底层通信资源和通信操作能力。
@@ -368,24 +368,6 @@ KV Cache 传输的逻辑示意，实际硬件路径需要根据具体协议和�
 | 2. 内存准备 | 分配、映射、注册源和目标内存 | HBM、VA、MR |
 | 3. 数据搬运 | 发起 Read/Write，执行实际传输 | 数据面、RDMA/URMA |
 | 4. 完成同步 | 等待完成状态，确认目标数据可用 | Notify、Completion |
-
-```mermaid
-sequenceDiagram
-    participant A as 服务器 A
-    participant AH as NPU A HBM
-    participant NET as 通信网络
-    participant BH as NPU B HBM
-    participant B as 服务器 B
-
-    A->>B: 交换 Endpoint 和能力
-    A->>AH: 注册源内存
-    B->>BH: 注册目标内存
-    B-->>A: 返回远端访问描述
-    AH->>NET: 发起 Read / Write
-    NET->>BH: 传输 KV Cache
-    BH-->>B: Completion
-    B-->>A: Notify / 完成确认
-```
 
 如果启用了 Host DRAM 作为中间缓冲，路径可能变成：
 

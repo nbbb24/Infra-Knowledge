@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 112" role="img" aria-labelledby="title desc">
+  <title id="title">单 Die 封装示意</title>
+  <desc id="desc">一个封装中包含一个 Die 0。</desc>
+  <rect x="10" y="8" width="140" height="92" rx="10" fill="#64748b" fill-opacity=".12" stroke="#94a3b8"/>
+  <text x="80" y="23" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#0d0d0d">封装 Package</text>
+  <rect x="37" y="33" width="86" height="57" rx="5" fill="#3b82f6" fill-opacity=".25" stroke="#60a5fa"/>
+  <text x="80" y="64" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="600"
+        fill="#0d0d0d">Die 0</text>
+</svg>
