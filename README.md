@@ -1,14 +1,14 @@
 <h1 align="center">Infra Knowledge</h1>
 
-<p align="center">A bilingual knowledge base for AI infrastructure</p>
+<p align="center">AI 基础设施学习笔记</p>
 
 <p align="center">
-| <a href="docs/zh/index.md">中文</a> | <a href="docs/en/index.md">EN</a> |
+| <a href="docs/zh/index.md">中文文档</a> |
 </p>
 
-The first topic explains NPU hardware, memory movement, and cluster networking in plain language.
+第一阶段整理 NPU 硬件、内存、数据搬运、互联通信和性能分析知识。
 
-## Local preview
+## 本地预览
 
 ```bash
 python -m venv .venv
@@ -17,31 +17,31 @@ python -m pip install -r requirements/mkdocs.txt
 mkdocs serve
 ```
 
-On Windows PowerShell, activate the environment with `.venv\Scripts\Activate.ps1`.
-Open `http://127.0.0.1:8000` after the server starts.
+Windows PowerShell 使用 `.venv\Scripts\Activate.ps1` 激活虚拟环境。服务启动后打开
+`http://127.0.0.1:8000`。
 
-## Build
+## 构建
 
 ```bash
 mkdocs build --strict
 ```
 
-The generated site is written to `site/` and is intentionally ignored by Git.
+生成的网站位于 `site/`，该目录已加入 Git 忽略列表。
 
-## Read the Docs deployment
+## 部署到 Read the Docs
 
-1. Sign in to Read the Docs with the GitHub account that can access this repository.
-2. Choose **Add project** and import `nbbb24/Infra-Knowledge`.
-3. Keep the default branch as `main`. Read the Docs reads `.readthedocs.yaml` automatically.
-4. Trigger the first build and open the generated site URL.
-5. Optional: add a custom domain under **Admin → Domains** after the first successful build.
+1. 使用能够访问本仓库的 GitHub 账号登录 Read the Docs。
+2. 选择 **Add project**，导入 `nbbb24/Infra-Knowledge`。
+3. 保持默认分支为 `main`，Read the Docs 会自动读取 `.readthedocs.yaml`。
+4. 触发第一次构建并打开生成的网站地址。
+5. 首次构建成功后，可以在 **Admin → Domains** 中绑定自定义域名。
 
-No generated HTML needs to be committed. Future pushes to `main` can trigger documentation builds automatically.
+不需要提交生成的 HTML。后续推送到 `main` 分支即可触发文档构建。
 
-## Writing conventions
+## 编写约定
 
-- Put Chinese pages under `docs/zh/` and English pages under `docs/en/`.
-- Add every new page to `nav` in `mkdocs.yml`.
-- Define an acronym on first use, for example `H2D (Host to Device)`.
-- State the hardware generation or product model when a fact is not universal.
-- Prefer diagrams and observable paths over isolated definitions.
+- 中文页面统一放在 `docs/zh/` 下。
+- 新增页面后，需要同步更新 `mkdocs.yml` 中的 `nav`。
+- 缩写首次出现时给出全称，例如 `H2D (Host to Device)`。
+- 非通用结论需要注明硬件型号或架构代际。
+- 优先用拓扑、数据路径和可观测现象解释概念。

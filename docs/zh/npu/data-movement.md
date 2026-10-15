@@ -57,8 +57,30 @@ H2D 完成只表示数据进入了 Device Memory，不表示它已经位于 AI C
 | Host DRAM | Device Memory | H2D | CPU 内存 → PCIe → NPU 内存 |
 | Device Memory | Host DRAM | D2H | NPU 内存 → PCIe → CPU 内存 |
 | Device A | Device B | D2D / P2P | PCIe、专用互联或网络，依拓扑而定 |
+| Host A | Host B | H2H | 本机内存复制或跨节点 Host 传输，依上下文而定 |
 | Device GM | AI Core Local Memory | Copy-in | DMA/MTE 片内搬运 |
 | AI Core Local Memory | Device GM | Copy-out | DMA/MTE 片内搬运 |
+
+## 传输方向不等于通信协议
+
+H2D 只说明数据从 Host Memory 移动到 Device Memory，并不直接说明使用哪一种 API、硬件引擎或链路。
+P2P 也只说明两个对等设备之间存在直接传输关系。分析一次数据移动时，需要分别回答：
+
+1. 数据起点和终点在哪里？
+2. 数据经过哪些总线、交换器件或网络？
+3. 哪个软件接口和硬件引擎负责搬运？
+4. 完成状态通过轮询、事件还是通知确认？
+
+## DMA、SDMA、RDMA 和 MTE
+
+| 术语 | 所在层次 | 重点 |
+| --- | --- | --- |
+| DMA | 通用数据搬运机制 | 专用引擎搬运内存数据，避免 CPU 逐字节复制 |
+| SDMA | 昇腾设备传输语境 | 常见于设备内或特定设备互联的数据搬运路径 |
+| RDMA | 网络访问语义 | 远端直接访问已注册内存，减少 CPU 参与和额外复制 |
+| MTE | AI Core 内部 | 在 GM、L1、L0、UB 等存储层次间搬运和转换数据 |
+
+MTE 和 SDMA 不能直接当作同一种硬件引擎；不同产品对这些名称的具体实现也可能不同。
 
 ## 参考资料
 

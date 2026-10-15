@@ -1,11 +1,11 @@
 site_name: Infra Knowledge
-site_description: Bilingual notes on AI infrastructure, NPU architecture, data movement, and networking.
+site_description: AI 基础设施、NPU 架构、数据搬运与高性能网络学习笔记。
 site_author: Infra Knowledge contributors
 site_url: !ENV [READTHEDOCS_CANONICAL_URL, "http://127.0.0.1:8000"]
 repo_url: https://github.com/nbbb24/Infra-Knowledge
 repo_name: nbbb24/Infra-Knowledge
-edit_uri: edit/main/docs/
-docs_dir: docs
+edit_uri: edit/main/docs/zh/
+docs_dir: docs/zh
 
 theme:
   name: material
@@ -38,9 +38,7 @@ theme:
 
 plugins:
   - search:
-      lang:
-        - zh
-        - en
+      lang: zh
 
 markdown_extensions:
   - admonition
@@ -61,18 +59,23 @@ markdown_extensions:
       alternate_style: true
 
 nav:
-  - 首页 / Home: index.md
-  - 中文:
-      - 学习路线: zh/index.md
-      - 一张图理解 NPU: zh/npu/mental-model.md
-      - 核心术语: zh/npu/glossary.md
-      - 数据搬运与 H2D: zh/npu/data-movement.md
-      - 网络平面与出框口: zh/npu/network-planes.md
-  - English:
-      - Learning path: en/index.md
-      - NPU mental model: en/npu/mental-model.md
-      - Core glossary: en/npu/glossary.md
-      - Data movement and H2D: en/npu/data-movement.md
-      - Network planes and uplinks: en/npu/network-planes.md
+  - 首页: index.md
+  - 基础知识:
+      - NPU 硬件与层级: npu/mental-model.md
+      - 核心术语: npu/glossary.md
+  - 数据与通信:
+      - 数据搬运与 H2D: npu/data-movement.md
+      - 网络平面与出框口: npu/network-planes.md
+      - 互联、协议与通信软件: npu/interconnects.md
+      - 内存、NUMA 与地址: npu/memory-addressing.md
+  - 实践:
+      - 一次端到端数据传输: npu/end-to-end-transfer.md
+      - 性能分析与常用工具: npu/performance-tools.md
+
+extra:
+  alternate:
+    - name: 简体中文
+      link: ./
+      lang: zh
 
 copyright: Copyright &copy; Infra Knowledge contributors
